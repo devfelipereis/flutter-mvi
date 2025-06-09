@@ -11,20 +11,20 @@ class TestState extends BaseState {
   }
 }
 
-class IncrementEvent extends BaseEvent {
-  const IncrementEvent();
-}
+sealed class TestEvent extends BaseEvent {}
 
-class DecrementEvent extends BaseEvent {
-  const DecrementEvent();
-}
+final class IncrementEvent extends TestEvent {}
 
-class TestEffect extends BaseEffect {
-  const TestEffect(this.message);
+final class DecrementEvent extends TestEvent {}
+
+sealed class TestEffect extends BaseEffect {}
+
+final class CounterEffect extends TestEffect {
+  CounterEffect(this.message);
   final String message;
 }
 
-class TestViewModel extends BaseViewModel<TestState, BaseEvent, TestEffect> {
+class TestViewModel extends BaseViewModel<TestState, TestEvent, TestEffect> {
   TestViewModel() : super(const TestState());
 
   bool initCalled = false;
@@ -43,26 +43,31 @@ class TestViewModel extends BaseViewModel<TestState, BaseEvent, TestEffect> {
   }
 
   @override
-  void onEvent(BaseEvent event) {
-    if (event is IncrementEvent) {
-      updateState(state.value.copyWith(value: state.value.value + 1));
-      addEffect(const TestEffect('Incremented'));
-    } else if (event is DecrementEvent) {
-      updateState(state.value.copyWith(value: state.value.value - 1));
-      addEffect(const TestEffect('Decremented'));
-    }
+  void onEvent(TestEvent event) => switch (event) {
+    IncrementEvent() => _onIncrement(),
+    DecrementEvent() => _onDecrement(),
+  };
+
+  void _onIncrement() {
+    updateState(state.value.copyWith(value: state.value.value + 1));
+    addEffect(CounterEffect('Incremented'));
+  }
+
+  void _onDecrement() {
+    updateState(state.value.copyWith(value: state.value.value - 1));
+    addEffect(CounterEffect('Decremented'));
   }
 
   void increment() {
-    addEvent(const IncrementEvent());
+    addEvent(IncrementEvent());
   }
 
   void decrement() {
-    addEvent(const DecrementEvent());
+    addEvent(DecrementEvent());
   }
 
   void emitEffect(String message) {
-    addEffect(TestEffect(message));
+    addEffect(CounterEffect(message));
   }
 }
 
@@ -84,11 +89,9 @@ void main() {
     });
 
     test('should initialize with the provided initial state', () {
-      // Given
       const initialState = TestState();
       final viewModel = TestViewModel();
 
-      // Then
       final state = viewModel.state.value;
 
       expect(state.value, equals(initialState.value));
@@ -96,91 +99,75 @@ void main() {
     });
 
     test('should update state when an event is processed', () async {
-      // When
       viewModel.increment();
 
-      // Allow the event to be processed
       await pumpEventQueue();
 
-      // Then
       final state = viewModel.state.value;
       expect(state.value, equals(1));
 
-      // When
       viewModel.decrement();
       await pumpEventQueue();
 
-      // Then
       final newState = viewModel.state.value;
       expect(newState.value, equals(0));
     });
 
     test('should emit effects', () async {
-      // Given
       final effectMessages = <String>[];
+
       viewModel.effects.listen((effect) {
-        effectMessages.add(effect.message);
+        switch (effect) {
+          case CounterEffect():
+            effectMessages.add(effect.message);
+        }
       });
 
-      // When
       viewModel.emitEffect('Test effect');
       await pumpEventQueue();
 
       viewModel.increment();
       await pumpEventQueue();
 
-      // Then
       expect(effectMessages, ['Test effect', 'Incremented']);
     });
 
     test('should allow state observation through selectors', () async {
-      // Given
       final valueSelector = viewModel.select((state) => state.value);
 
-      // Then
       expect(valueSelector.value, equals(0));
 
-      // When
       viewModel.increment();
       await pumpEventQueue();
 
-      // Then
       expect(valueSelector.value, equals(1));
     });
 
     test('should call onDispose when disposed', () {
-      // When
       viewModel.dispose();
 
-      // Then
       expect(viewModel.isDisposed, isTrue);
       expect(viewModel.disposeCalled, isTrue);
     });
 
     test('should not process events after disposal', () {
-      // Given
       viewModel.dispose();
 
-      // When/Then - should throw since stream is closed
-      expect(
-        () => viewModel.addEvent(const IncrementEvent()),
-        throwsStateError,
-      );
+      // should throw since stream is closed
+      expect(() => viewModel.addEvent(IncrementEvent()), throwsStateError);
     });
 
     test('should not allow adding effects after disposal', () {
-      // Given
       viewModel.dispose();
 
-      // When/Then - should throw since stream is closed
+      // should throw since stream is closed
       expect(() => viewModel.emitEffect('Test effect'), throwsStateError);
     });
 
     test('should not allow updating state after disposal', () {
-      // Given
       viewModel.dispose();
 
-      // When/Then - should throw since ViewModel is disposed
+      // should throw since ViewModel is disposed
       expect(
         () => viewModel.updateState(const TestState(value: 1)),
         throwsStateError,
