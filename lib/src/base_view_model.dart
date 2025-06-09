@@ -8,9 +8,6 @@ import 'package:signals/signals.dart';
 /// In MVI, the state represents the Model component.
 abstract class BaseState {
   const BaseState();
-
-  /// Cast this state to a specific type.
-  T cast<T>() => this as T;
 }
 
 /// Base class for all events that can be dispatched to the ViewModel.

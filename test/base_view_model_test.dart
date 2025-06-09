@@ -167,5 +167,24 @@ void main() {
         throwsStateError,
       );
     });
+
+    test('should not allow adding effects after disposal', () {
+      // Given
+      viewModel.dispose();
+
+      // When/Then - should throw since stream is closed
+      expect(() => viewModel.emitEffect('Test effect'), throwsStateError);
+    });
+
+    test('should not allow updating state after disposal', () {
+      // Given
+      viewModel.dispose();
+
+      // When/Then - should throw since ViewModel is disposed
+      expect(
+        () => viewModel.updateState(const TestState(value: 1)),
+        throwsStateError,
+      );
+    });
   });
 }
