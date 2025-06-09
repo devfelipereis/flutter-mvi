@@ -34,12 +34,6 @@ mixin ViewModelMixin<
   @protected
   VM provideViewModel();
 
-  /// Factory method to create a ViewModel for improved testability
-  ///
-  /// This wrapper method allows for easier mocking in tests
-  @protected
-  VM createViewModel(VM Function() factory) => factory();
-
   /// Override this method to handle effects (side effects) from the ViewModel
   ///
   /// Effects are one-time events that don't affect state, such as navigation,
@@ -55,9 +49,6 @@ mixin ViewModelMixin<
     debugPrint('Error in effect stream: $error');
     debugPrintStack(stackTrace: stackTrace);
   }
-
-  /// Convenience getter to access the current state from the ViewModel
-  S get currentState => viewModel.currentState;
 
   @override
   void initState() {

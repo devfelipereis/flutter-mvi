@@ -45,10 +45,10 @@ class TestViewModel extends BaseViewModel<TestState, BaseEvent, TestEffect> {
   @override
   void onEvent(BaseEvent event) {
     if (event is IncrementEvent) {
-      updateState(currentState.copyWith(value: currentState.value + 1));
+      updateState(state.value.copyWith(value: state.value.value + 1));
       addEffect(const TestEffect('Incremented'));
     } else if (event is DecrementEvent) {
-      updateState(currentState.copyWith(value: currentState.value - 1));
+      updateState(state.value.copyWith(value: state.value.value - 1));
       addEffect(const TestEffect('Decremented'));
     }
   }
@@ -68,7 +68,6 @@ class TestViewModel extends BaseViewModel<TestState, BaseEvent, TestEffect> {
 
 // Helper for the tests to await async event processing
 Future<void> pumpEventQueue() async {
-  await Future.delayed(Duration.zero);
   await Future.delayed(Duration.zero);
 }
 
@@ -90,7 +89,9 @@ void main() {
       final viewModel = TestViewModel();
 
       // Then
-      expect(viewModel.currentState.value, equals(initialState.value));
+      final state = viewModel.state.value;
+
+      expect(state.value, equals(initialState.value));
       expect(viewModel.initCalled, isTrue);
     });
 
@@ -102,14 +103,16 @@ void main() {
       await pumpEventQueue();
 
       // Then
-      expect(viewModel.currentState.value, equals(1));
+      final state = viewModel.state.value;
+      expect(state.value, equals(1));
 
       // When
       viewModel.decrement();
       await pumpEventQueue();
 
       // Then
-      expect(viewModel.currentState.value, equals(0));
+      final newState = viewModel.state.value;
+      expect(newState.value, equals(0));
     });
 
     test('should emit effects', () async {

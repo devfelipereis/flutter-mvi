@@ -59,9 +59,6 @@ abstract class BaseViewModel<
   /// The public read-only state signal that UI components (View) can observe.
   ReadonlySignal<S> get state => _state.readonly();
 
-  /// Returns the current state value without subscribing to changes.
-  S get currentState => _state.value;
-
   /// Creates a derived signal that computes a value from the current state.
   /// Use this to observe specific parts of the state.
   ReadonlySignal<R> select<R>(R Function(S state) selector) {

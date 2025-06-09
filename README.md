@@ -11,29 +11,48 @@ and the Flutter guide for
 [developing packages and plugins](https://flutter.dev/to/develop-packages).
 -->
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+# MVI - Model-View-Intent for Flutter
 
-## Features
+An implementation of the MVI (Model-View-Intent) pattern for Flutter that uses the `signals` package for managing state.
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+This package provides a basic structure to implement the MVI pattern in your Flutter projects, helping you to build reactive and predictable user interfaces.
 
-## Getting started
+## What is MVI?
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+MVI is a unidirectional data flow architecture pattern that helps in managing the state of your application in a more predictable way. It is composed of three main components:
+
+-   **Model**: Represents the state of the application. It's an immutable object that holds all the data needed for the view.
+-   **View**: The user interface (UI) that displays the state. In Flutter, this would be your widgets.
+-   **Intent**: Represents an intention to change the state. These are usually triggered by user interactions with the UI.
+
+## Core Concepts
+
+This implementation is built around a few core components:
+
+-   `BaseViewModel`: A class that holds the business logic. It receives intents, processes them, and emits new states.
+-   `ViewModelMixin`: A mixin that can be used with a `StatefulWidget`'s `State` to automatically listen to state changes from a `BaseViewModel` and rebuild the UI.
+
+## State Management with Signals
+
+This MVI implementation uses the [signals](https://pub.dev/packages/signals) package to manage the state. The state of a `BaseViewModel` is a `Signal` that can be observed by the UI. When a new state is emitted, the UI is automatically rebuilt.
+
+## Getting Started
+
+Add the package to your `pubspec.yaml`:
+
+```yaml
+dependencies:
+  mvi: ^1.0.0
+```
+
+Then, run `flutter pub get`.
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+Check the example folder for a detailed implementation with tests.
 
-```dart
-const like = 'sample';
-```
+*Note*: The architecture in this example is designed solely for simplicity and demonstration purposes.
 
-## Additional information
+## Contributing
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+Contributions are welcome! Please feel free to submit a pull request or open an issue.

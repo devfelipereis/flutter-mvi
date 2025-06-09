@@ -50,7 +50,7 @@ class TestViewModel extends BaseViewModel<TestState, TestEvent, TestEffect> {
     addEffect(const TestEffect(message: 'Effect triggered'));
 
     if (event is IncrementEvent) {
-      updateState(currentState.copyWith(counter: currentState.counter + 1));
+      updateState(state.value.copyWith(counter: state.value.counter + 1));
     }
   }
 
@@ -84,9 +84,7 @@ class TestWidgetState extends State<TestWidget>
 
   @override
   TestViewModel provideViewModel() {
-    return widget.viewModelCreator != null
-        ? createViewModel(widget.viewModelCreator!)
-        : TestViewModel();
+    return widget.viewModelCreator?.call() ?? TestViewModel();
   }
 
   @override
@@ -213,7 +211,7 @@ void main() {
       await tester.pump();
 
       // Then
-      expect(viewModel.currentState.counter, 1);
+      expect(viewModel.state.value.counter, 1);
       expect(viewModel.select((state) => state.counter).value, 1);
     });
 
@@ -223,8 +221,8 @@ void main() {
       final state = tester.state<TestWidgetState>(find.byType(TestWidget));
 
       // Then
-      expect(state.currentState, isA<TestState>());
-      expect(state.currentState.counter, 0);
+      expect(state.viewModel.state.value, isA<TestState>());
+      expect(state.viewModel.state.value.counter, 0);
     });
   });
 }
