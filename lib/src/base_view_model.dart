@@ -124,6 +124,16 @@ abstract class BaseViewModel<
     // Override this method for cleanup logic
   }
 
+  /// Adds an error to the effect stream. This is only used for testing.
+  @protected
+  @visibleForTesting
+  void addEffectError(Object error) {
+    if (_isDisposed) {
+      throw StateError('Cannot add effect error to a disposed ViewModel');
+    }
+    _effects.addError(error);
+  }
+
   /// Disposes the ViewModel, releasing all resources.
   /// This cancels all subscriptions and closes all streams.
   void dispose() {
