@@ -128,9 +128,6 @@ abstract class BaseViewModel<
   @protected
   @visibleForTesting
   void addEffectError(Object error) {
-    if (_isDisposed) {
-      throw StateError('Cannot add effect error to a disposed ViewModel');
-    }
     _effects.addError(error);
   }
 
