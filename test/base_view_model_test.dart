@@ -71,11 +71,6 @@ class TestViewModel extends BaseViewModel<TestState, TestEvent, TestEffect> {
   }
 }
 
-// Helper for the tests to await async event processing
-Future<void> pumpEventQueue() async {
-  await Future.delayed(Duration.zero);
-}
-
 void main() {
   group('BaseViewModel', () {
     late TestViewModel viewModel;
