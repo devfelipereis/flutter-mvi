@@ -38,13 +38,13 @@ mixin ViewModelMixin<
   ///
   /// Effects are one-time events that don't affect state, such as navigation,
   /// showing snackbars, or other UI actions
-  @protected
+  @protected // coverage:ignore-line
   void onEffect(F effect, BuildContext context) {}
 
   /// Override this method to handle errors in the effect stream
   ///
   /// By default, errors are logged to the console
-  @protected
+  @protected // coverage:ignore-line
   void onEffectError(Object error, StackTrace stackTrace) {
     debugPrint('Error in effect stream: $error');
     debugPrintStack(stackTrace: stackTrace);

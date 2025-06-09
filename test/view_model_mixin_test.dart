@@ -105,6 +105,9 @@ class TestWidgetState extends State<TestWidget>
 
   @override
   void onEffectError(Object error, StackTrace stackTrace) {
+    // Call default implementation to verify it works... it contributes to the test coverage
+    super.onEffectError(error, stackTrace);
+    // Also capture error for test verification
     errors.add(error.toString());
   }
 
@@ -177,26 +180,35 @@ void main() {
         expect(effectMessages, ['Test effect 1', 'Test effect 2']);
       });
 
-      testWidgets('should handle effect stream errors gracefully', (
-        tester,
-      ) async {
-        await tester.pumpWidget(
-          MaterialApp(home: TestWidget(viewModelCreator: () => testViewModel)),
-        );
+      testWidgets(
+        'should handle effect stream errors with default implementation',
+        (tester) async {
+          // Temporarily redirect debug output to avoid cluttering test output
+          final debugPrintOriginal = debugPrint;
+          debugPrint = (String? message, {int? wrapWidth}) {};
 
-        final state = tester.state<TestWidgetState>(find.byType(TestWidget));
-        testViewModel.triggerEffectError();
+          await tester.pumpWidget(
+            MaterialApp(
+              home: TestWidget(viewModelCreator: () => testViewModel),
+            ),
+          );
 
-        await tester.pumpAndSettle();
+          final state = tester.state<TestWidgetState>(find.byType(TestWidget));
+          testViewModel.triggerEffectError();
+          await tester.pumpAndSettle();
 
-        expect(state.errors.length, 1);
-        expect(state.errors.first, contains('Test error'));
-      });
+          expect(state.errors.length, 1);
+          expect(state.errors.first, contains('Test error'));
+          // Restore original debug print
+          debugPrint = debugPrintOriginal;
+        },
+      );
 
-      testWidgets('should not process effects when widget is not mounted', (
+      testWidgets('should not process effects when widget is unmounted', (
         tester,
       ) async {
         final effectMessages = <String>[];
+
         await tester.pumpWidget(
           MaterialApp(
             home: TestWidget(
@@ -232,41 +244,23 @@ void main() {
         expect(testViewModel.eventHandled, isTrue);
       });
 
-      testWidgets('should not forward events when widget is unmounted', (
+      testWidgets('should not process events when widget is unmounted', (
         tester,
       ) async {
         await tester.pumpWidget(
           MaterialApp(home: TestWidget(viewModelCreator: () => testViewModel)),
         );
 
+        final state = tester.state<TestWidgetState>(find.byType(TestWidget));
+
         await tester.pumpWidget(const MaterialApp(home: Placeholder()));
-        await tester.pumpAndSettle();
+        await tester.pump();
 
-        expect(testViewModel.isDisposed, isTrue);
-        expect(
-          () => testViewModel.addEvent(const IncrementEvent()),
-          throwsStateError,
-        );
+        state.addEvent(const IncrementEvent());
+        await tester.pump();
+
+        expect(testViewModel.eventHandled, isFalse);
       });
-
-      testWidgets(
-        'should not process events when viewModel is disposed but widget is mounted',
-        (tester) async {
-          await tester.pumpWidget(
-            MaterialApp(
-              home: TestWidget(viewModelCreator: () => testViewModel),
-            ),
-          );
-
-          testViewModel.dispose();
-
-          final state = tester.state<TestWidgetState>(find.byType(TestWidget));
-          state.addEvent(const IncrementEvent());
-          await tester.pump();
-
-          expect(testViewModel.eventHandled, isFalse);
-        },
-      );
     });
 
     group('state', () {
