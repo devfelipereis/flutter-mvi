@@ -11,6 +11,14 @@ and the Flutter guide for
 [developing packages and plugins](https://flutter.dev/to/develop-packages).
 -->
 
+<p align="center">
+<a href="https://github.com/devfelipereis/flutter-mvi/actions"><img src="https://github.com/devfelipereis/flutter-mvi/actions/workflows/test.yaml/badge.svg" alt="test"></a>
+<a href="https://codecov.io/gh/devfelipereis/flutter-mvi" > 
+ <img src="https://codecov.io/gh/devfelipereis/flutter-mvi/graph/badge.svg?token=8HF2PFOEQB"/> 
+ </a>
+<a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-purple.svg" alt="License: MIT"></a>
+</p>
+
 # MVI - Model-View-Intent for Flutter
 
 An implementation of the MVI (Model-View-Intent) pattern for Flutter that uses the `signals` package for managing state.
