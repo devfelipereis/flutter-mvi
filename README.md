@@ -51,7 +51,7 @@ Then, run `flutter pub get`.
 
 Check the example folder for a detailed implementation with tests.
 
-*Note*: The architecture in this example is designed solely for simplicity and demonstration purposes.
+**Note**: The architecture in this example is designed solely for simplicity and demonstration purposes.
 
 ## Contributing
 
