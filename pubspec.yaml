@@ -1,7 +1,7 @@
 name: mvi
 description: "An implementation of the MVI pattern for Flutter"
 version: 1.0.0
-homepage: https://github.com/devfelipereis/mvi
+homepage: https://github.com/devfelipereis/flutter-mvi
 
 environment:
   sdk: ^3.8.1
