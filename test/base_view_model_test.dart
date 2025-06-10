@@ -71,7 +71,29 @@ class TestViewModel extends BaseViewModel<TestState, TestEvent, TestEffect> {
   }
 }
 
+class _TestState extends BaseState {
+  const _TestState();
+}
+
+class _AnotherState extends TestState {
+  const _AnotherState();
+}
+
 void main() {
+  group('BaseState', () {
+    test('should cast state to a specific type', () {
+      // just to simulate receiving a base state class
+      const BaseState state = _TestState();
+      final castedState = state.cast<_TestState>();
+      expect(castedState, isA<_TestState>());
+    });
+
+    test('should throw an error when casting to a wrong type', () {
+      const state = _TestState();
+      expect(() => state.cast<_AnotherState>(), throwsA(isA<TypeError>()));
+    });
+  });
+
   group('BaseViewModel', () {
     late TestViewModel viewModel;
 
