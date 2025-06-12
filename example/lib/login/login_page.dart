@@ -6,9 +6,15 @@ import 'package:example/posts/data/posts_repository.dart';
 import 'package:example/posts/view_model/posts_view_model.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
+// IMPORTANT: We use a factory function (ViewModelCreator) instead of passing a direct ViewModel instance
+// to ensure the ViewModel is created when the widget needs it, not during widget tree construction.
+// This avoids unnecessary recreation during rebuilds and helps manage lifecycle cleanly.
+// Creating a new instance on every build can cause loss of state, wasted resources, and unintended behavior.
 typedef LoginVMCreator =
     ViewModelCreator<LoginState, LoginEvent, LoginEffect, LoginViewModel>;
 
+// ViewModelMixin provides the connection between the Widget and ViewModel
+// It handles state updates, event dispatching, and effect processing
 typedef LoginVMMixin =
     ViewModelMixin<
       LoginPage,
@@ -19,6 +25,8 @@ typedef LoginVMMixin =
     >;
 
 class LoginPage extends StatefulWidget {
+  // The viewModel parameter is a factory function that creates the LoginViewModel
+  // This allows for dependency injection and easier testing
   const LoginPage({required this.viewModel, super.key});
   final LoginVMCreator viewModel;
 
@@ -28,15 +36,18 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> with LoginVMMixin {
   @override
+  // Creates and provides the ViewModel instance for this widget
   LoginViewModel provideViewModel() => widget.viewModel();
 
-  // select only the isAuthenticating property from the state
-  // not complex, but it's a good example of how to use computed
+  // Uses signals to observe the authentication state from the ViewModel
+  // This creates a reactive connection that automatically updates the UI
   late final isAuthenticating = viewModel.select(
     (state) => state.isAuthenticating,
   );
 
   @override
+  // Handles side effects produced by the ViewModel
+  // Effects represent one-time actions like navigation or showing dialogs
   void onEffect(covariant LoginEffect effect, BuildContext context) =>
       switch (effect) {
         LoginSuccess() => _onLoginSuccess(context),
@@ -69,6 +80,8 @@ class _LoginPageState extends State<LoginPage> with LoginVMMixin {
       await Future<void>.delayed(const Duration(milliseconds: 300));
     }
 
+    // Dispatches a LoginRequested event to the ViewModel
+    // Events represent user intentions or actions
     addEvent(LoginRequested());
   }
 
@@ -78,6 +91,9 @@ class _LoginPageState extends State<LoginPage> with LoginVMMixin {
       appBar: AppBar(title: const Text('MVI Example')),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
+        // Watch widget from signals_flutter automatically rebuilds this subtree
+        // whenever any signal it depends on changes (in this case, viewModel.state)
+        // This ensures our UI stays in sync with the ViewModel's state efficiently
         child: Watch((context) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -93,6 +109,7 @@ class _LoginPageState extends State<LoginPage> with LoginVMMixin {
                     color: Theme.of(context).primaryColor,
                   ),
                 ),
+                // Dispatches EmailChanged events to update the ViewModel state
                 onChanged: (value) => addEvent(EmailChanged(value)),
               ),
               const SizedBox(height: 8),
@@ -107,6 +124,7 @@ class _LoginPageState extends State<LoginPage> with LoginVMMixin {
                   ),
                 ),
                 obscureText: true,
+                // Dispatches PasswordChanged events to update the ViewModel state
                 onChanged: (value) => addEvent(PasswordChanged(value)),
               ),
               const SizedBox(height: 16),
