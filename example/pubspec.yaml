@@ -40,7 +40,6 @@ dependencies:
   http: ^1.4.0
   multiple_result: ^5.2.0
   copy_with_extension: ^6.0.1
-  signals_flutter: ^6.0.2
 
 dev_dependencies:
   flutter_test:

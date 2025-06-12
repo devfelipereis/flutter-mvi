@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:signals/signals.dart';
+import 'package:signals_flutter/signals_flutter.dart';
 
 /// Base class for all state objects in the application.
 /// States should be immutable and contain all the data needed to render a UI.

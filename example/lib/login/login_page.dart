@@ -4,7 +4,6 @@ import 'package:mvi/mvi.dart';
 import 'package:example/login/view_model/login_view_model.dart';
 import 'package:example/posts/data/posts_repository.dart';
 import 'package:example/posts/view_model/posts_view_model.dart';
-import 'package:signals_flutter/signals_flutter.dart';
 
 // IMPORTANT: We use a factory function (ViewModelCreator) instead of passing a direct ViewModel instance
 // to ensure the ViewModel is created when the widget needs it, not during widget tree construction.
