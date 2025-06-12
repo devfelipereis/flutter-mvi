@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:example/login/login_page.dart';
 import 'package:example/login/view_model/login_view_model.dart';
-import 'package:flutter/services.dart';
 
 void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
-
   runApp(const MyApp());
 }
 
