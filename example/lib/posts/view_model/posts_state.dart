@@ -21,6 +21,9 @@ final class PostsLoaded extends PostsState {
 
   @override
   List<Object?> get props => [posts];
+
+  @override
+  String toString() => 'PostsLoaded(posts: $posts)';
 }
 
 final class PostsError extends PostsState {
@@ -30,4 +33,7 @@ final class PostsError extends PostsState {
 
   @override
   List<Object?> get props => [error];
+
+  @override
+  String toString() => 'PostsError(error: $error)';
 }

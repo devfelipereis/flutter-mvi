@@ -12,7 +12,7 @@ final class PostsViewModel
     extends BaseViewModel<PostsState, PostsEvent, PostsEffect> {
   PostsViewModel({required PostsRepository postsRepository})
     : _postsRepository = postsRepository,
-      super(const PostsLoading());
+      super(const PostsLoading(), debugLabel: 'PostsViewModel');
 
   final PostsRepository _postsRepository;
 

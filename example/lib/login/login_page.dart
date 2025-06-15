@@ -38,10 +38,11 @@ class _LoginPageState extends State<LoginPage> with LoginVMMixin {
   // Creates and provides the ViewModel instance for this widget
   LoginViewModel provideViewModel() => widget.viewModel();
 
-  // Uses signals to observe the authentication state from the ViewModel
-  // This creates a reactive connection that automatically updates the UI
-  late final isAuthenticating = viewModel.select(
+  // Uses signals to observe only the isAuthenticating part of the state
+  // and automatically dispose when the widget is disposed
+  late final _isAuthenticating = viewModel.select(
     (state) => state.isAuthenticating,
+    debugLabel: 'LoginPage: isAuthenticating',
   );
 
   @override
@@ -91,15 +92,17 @@ class _LoginPageState extends State<LoginPage> with LoginVMMixin {
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         // Watch widget from signals_flutter automatically rebuilds this subtree
-        // whenever any signal it depends on changes (in this case, viewModel.state)
-        // This ensures our UI stays in sync with the ViewModel's state efficiently
-        child: Watch((context) {
+        // whenever isAuthenticating changes
+        child: Watch(debugLabel: 'LoginPage: Login Form', (context) {
+          // Get the value of the isAuthenticating signal
+          final isAuthenticating = _isAuthenticating.value;
+
           return Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               TextField(
-                enabled: !isAuthenticating.value,
+                enabled: !isAuthenticating,
                 decoration: InputDecoration(
                   labelText: 'Email',
                   hintText: 'admin@admin.com',
@@ -113,7 +116,7 @@ class _LoginPageState extends State<LoginPage> with LoginVMMixin {
               ),
               const SizedBox(height: 8),
               TextField(
-                enabled: !isAuthenticating.value,
+                enabled: !isAuthenticating,
                 decoration: InputDecoration(
                   labelText: 'Password',
                   hintText: '123456',
@@ -128,9 +131,7 @@ class _LoginPageState extends State<LoginPage> with LoginVMMixin {
               ),
               const SizedBox(height: 16),
               OutlinedButton(
-                onPressed: isAuthenticating.value
-                    ? null
-                    : () => _onLogin(context),
+                onPressed: isAuthenticating ? null : () => _onLogin(context),
                 child: const Text(
                   'LOGIN',
                   style: TextStyle(fontWeight: FontWeight.bold),
@@ -139,7 +140,7 @@ class _LoginPageState extends State<LoginPage> with LoginVMMixin {
               const SizedBox(height: 16),
               SizedBox(
                 height: 50,
-                child: isAuthenticating.value
+                child: isAuthenticating
                     ? const Center(child: CircularProgressIndicator())
                     : null,
               ),

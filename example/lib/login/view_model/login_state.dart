@@ -19,4 +19,8 @@ final class LoginState extends BaseState with EquatableMixin {
 
   @override
   List<Object?> get props => [email, password, isAuthenticating, error];
+
+  @override
+  String toString() =>
+      'LoginState(email: $email, password: $password, isAuthenticating: $isAuthenticating, error: $error)';
 }

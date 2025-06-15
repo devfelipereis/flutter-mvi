@@ -49,7 +49,7 @@ class _PostsScreenState extends State<PostsScreen> with PostsVMMixin {
         // whenever any signal it depends on changes (in this case, viewModel.state)
         // This ensures our UI stays in sync with the ViewModel's state efficiently
         child: Watch(
-          debugLabel: 'Posts Content',
+          debugLabel: 'Posts Screen Content',
           // AnimatedSwitcher provides smooth transitions between different states
           (context) => AnimatedSwitcher(
             duration: const Duration(milliseconds: 500),
@@ -67,8 +67,7 @@ class _PostsScreenState extends State<PostsScreen> with PostsVMMixin {
   }
 }
 
-// UI components are split into separate widgets for better maintainability
-// Each component handles a specific state representation
+// Post list widget
 class _PostList extends StatelessWidget {
   const _PostList({required this.posts});
 

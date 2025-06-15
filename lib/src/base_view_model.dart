@@ -44,7 +44,8 @@ abstract class BaseViewModel<
 > {
   /// Creates a new ViewModel with the given [initialState].
   /// Initializes the event stream and calls [onInit].
-  BaseViewModel(S initialState) : _state = Signal(initialState) {
+  BaseViewModel(S initialState, {String? debugLabel})
+    : _state = Signal(initialState, debugLabel: debugLabel) {
     _eventsSubscription = _events.stream.listen(onEvent);
     onInit();
   }
@@ -61,8 +62,16 @@ abstract class BaseViewModel<
 
   /// Creates a derived signal that computes a value from the current state.
   /// Use this to observe specific parts of the state.
-  ReadonlySignal<R> select<R>(R Function(S state) selector) {
-    return computed(() => selector(_state.value));
+  ReadonlySignal<R> select<R>(
+    R Function(S state) selector, {
+    bool autoDispose = true,
+    String? debugLabel,
+  }) {
+    return computed(
+      () => selector(_state.value),
+      autoDispose: autoDispose,
+      debugLabel: debugLabel,
+    );
   }
 
   /// Stream controller for events (Intents) dispatched to this ViewModel.
