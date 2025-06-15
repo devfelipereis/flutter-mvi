@@ -1,6 +1,6 @@
 name: mvi
 description: "A Flutter package that applies the MVI architectural pattern to help manage app state and logic in a structured and maintainable way."
-version: 1.0.3
+version: 1.0.4
 homepage: https://github.com/devfelipereis/flutter-mvi
 
 environment:

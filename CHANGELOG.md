@@ -1,3 +1,9 @@
+## 1.0.4
+
+* Add debugLabel property to the view model
+* Add debugLabel parameter support to the select method
+* Improve the example
+
 ## 1.0.3
 
 * Use signals_flutter instead of signals as dependency
