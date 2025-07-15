@@ -25,7 +25,7 @@ final class CounterEffect extends TestEffect {
 }
 
 class TestViewModel extends BaseViewModel<TestState, TestEvent, TestEffect> {
-  TestViewModel() : super(const TestState());
+  TestViewModel() : super(const TestState(), debugLabel: 'TestViewModel');
 
   bool initCalled = false;
   bool disposeCalled = false;

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:signals_flutter/signals_flutter.dart';
@@ -43,12 +44,21 @@ abstract class BaseViewModel<
   F extends BaseEffect
 > {
   /// Creates a new ViewModel with the given [initialState].
-  /// Initializes the event stream and calls [onInit].
+  /// If [debugLabel] is not null, it will be used to log information about the ViewModel.
   BaseViewModel(S initialState, {String? debugLabel})
-    : _state = Signal(initialState, debugLabel: debugLabel) {
+    : _state = Signal(initialState, debugLabel: debugLabel),
+      _debugLabel = debugLabel {
     _eventsSubscription = _events.stream.listen(onEvent);
+
+    if (_debugLabel != null) {
+      log('$_debugLabel: [Created]');
+    }
+
     onInit();
   }
+
+  /// Debug label for logging purposes.
+  final String? _debugLabel;
 
   /// Whether this ViewModel has been disposed.
   bool _isDisposed = false;
@@ -99,6 +109,12 @@ abstract class BaseViewModel<
     if (_isDisposed) {
       throw StateError('Cannot update state of a disposed ViewModel');
     }
+
+    if (_debugLabel != null && _state.value != newState) {
+      log('$_debugLabel: [Previous State] => ${_state.value}');
+      log('$_debugLabel: [Current State] => $newState');
+    }
+
     _state.value = newState;
   }
 
@@ -108,6 +124,11 @@ abstract class BaseViewModel<
     if (_isDisposed) {
       throw StateError('Cannot add event to a disposed ViewModel');
     }
+
+    if (_debugLabel != null) {
+      log('$_debugLabel: [Event] => $event');
+    }
+
     _events.add(event);
   }
 
@@ -119,6 +140,11 @@ abstract class BaseViewModel<
     if (_isDisposed) {
       throw StateError('Cannot add effect to a disposed ViewModel');
     }
+
+    if (_debugLabel != null) {
+      log('$_debugLabel: [Effect] => $effect');
+    }
+
     _effects.add(effect);
   }
 
@@ -152,5 +178,9 @@ abstract class BaseViewModel<
     _events.close();
     _effects.close();
     _isDisposed = true;
+
+    if (_debugLabel != null) {
+      log('$_debugLabel: [Disposed]');
+    }
   }
 }
