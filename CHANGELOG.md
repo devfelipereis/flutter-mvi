@@ -1,3 +1,7 @@
+## 1.0.6
+
+* Log information about the ViewModel when debugLabel is not null
+
 ## 1.0.5
 
 * Simplify code
