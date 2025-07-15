@@ -1,3 +1,7 @@
+## 1.0.5
+
+* Simplify code
+
 ## 1.0.4
 
 * Add debugLabel property to the view model
