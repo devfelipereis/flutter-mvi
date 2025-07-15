@@ -12,11 +12,18 @@ and the Flutter guide for
 -->
 
 <p align="center">
-<a href="https://github.com/devfelipereis/flutter-mvi/actions"><img src="https://github.com/devfelipereis/flutter-mvi/actions/workflows/test.yaml/badge.svg" alt="test"></a>
-<a href="https://codecov.io/gh/devfelipereis/flutter-mvi" > 
- <img src="https://codecov.io/gh/devfelipereis/flutter-mvi/graph/badge.svg?token=8HF2PFOEQB"/> 
- </a>
-<a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-purple.svg" alt="License: MIT"></a>
+  <a href="https://pub.dev/packages/mvi">
+    <img alt="Pub Version" src="https://img.shields.io/pub/v/mvi">
+  </a>
+  <a href="https://github.com/devfelipereis/flutter-mvi/actions">
+    <img src="https://github.com/devfelipereis/flutter-mvi/actions/workflows/test.yaml/badge.svg" alt="test">
+  </a>
+  <a href="https://codecov.io/gh/devfelipereis/flutter-mvi" > 
+    <img src="https://codecov.io/gh/devfelipereis/flutter-mvi/graph/badge.svg"/> 
+  </a>
+  <a href="https://opensource.org/licenses/MIT">
+    <img src="https://img.shields.io/badge/license-MIT-purple.svg" alt="License: MIT">
+  </a>
 </p>
 
 # MVI - Model-View-Intent for Flutter
