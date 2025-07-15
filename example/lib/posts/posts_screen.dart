@@ -4,34 +4,26 @@ import 'package:example/posts/data/post_error.dart';
 import 'package:example/posts/data/post_model.dart';
 import 'package:example/posts/view_model/posts_view_model.dart';
 
-// IMPORTANT: We use a factory function (ViewModelCreator) to ensure the ViewModel is created
-// when the widget needs it, not during widget tree construction.
-// This avoids unnecessary recreation during rebuilds and helps manage lifecycle cleanly.
-// Creating a new instance on every build can cause loss of state, wasted resources, and unintended behavior.
-typedef PostsVMCreator =
-    ViewModelCreator<PostsState, PostsEvent, PostsEffect, PostsViewModel>;
-
-// The mixin provides the connection between widget and ViewModel
-// It handles the lifecycle, state updates, and event dispatching
-typedef PostsVMMixin =
-    ViewModelMixin<
-      PostsScreen,
-      PostsState,
-      PostsEvent,
-      PostsEffect,
-      PostsViewModel
-    >;
-
 class PostsScreen extends StatefulWidget {
   const PostsScreen({required this.viewModel, super.key});
 
-  final PostsVMCreator viewModel;
+  final ViewModelCreator<PostsViewModel> viewModel;
 
   @override
   State<PostsScreen> createState() => _PostsScreenState();
 }
 
-class _PostsScreenState extends State<PostsScreen> with PostsVMMixin {
+class _PostsScreenState extends State<PostsScreen>
+    with
+        // The mixin provides the connection between widget and ViewModel
+        // It handles the lifecycle, state updates, and event dispatching
+        ViewModelMixin<
+          PostsScreen,
+          PostsState,
+          PostsEvent,
+          PostsEffect,
+          PostsViewModel
+        > {
   @override
   // Creates the ViewModel and immediately triggers a FetchPosts event
   // This is a good example of handling initial data loading in MVI

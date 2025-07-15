@@ -5,35 +5,30 @@ import 'package:example/login/view_model/login_view_model.dart';
 import 'package:example/posts/data/posts_repository.dart';
 import 'package:example/posts/view_model/posts_view_model.dart';
 
-// IMPORTANT: We use a factory function (ViewModelCreator) instead of passing a direct ViewModel instance
-// to ensure the ViewModel is created when the widget needs it, not during widget tree construction.
-// This avoids unnecessary recreation during rebuilds and helps manage lifecycle cleanly.
-// Creating a new instance on every build can cause loss of state, wasted resources, and unintended behavior.
-typedef LoginVMCreator =
-    ViewModelCreator<LoginState, LoginEvent, LoginEffect, LoginViewModel>;
-
-// ViewModelMixin provides the connection between the Widget and ViewModel
-// It handles state updates, event dispatching, and effect processing
-typedef LoginVMMixin =
-    ViewModelMixin<
-      LoginPage,
-      LoginState,
-      LoginEvent,
-      LoginEffect,
-      LoginViewModel
-    >;
-
 class LoginPage extends StatefulWidget {
-  // The viewModel parameter is a factory function that creates the LoginViewModel
-  // This allows for dependency injection and easier testing
   const LoginPage({required this.viewModel, super.key});
-  final LoginVMCreator viewModel;
+
+  // IMPORTANT: We use a factory function (ViewModelCreator) to ensure the ViewModel is created
+  // when the widget needs it, not during widget tree construction.
+  // This avoids unnecessary recreation during rebuilds and helps manage lifecycle cleanly.
+  // Creating a new instance on every build can cause loss of state, wasted resources, and unintended behavior.
+  final ViewModelCreator<LoginViewModel> viewModel;
 
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> with LoginVMMixin {
+class _LoginPageState extends State<LoginPage>
+    with
+        // The mixin provides the connection between widget and ViewModel
+        // It handles the lifecycle, state updates, and event dispatching
+        ViewModelMixin<
+          LoginPage,
+          LoginState,
+          LoginEvent,
+          LoginEffect,
+          LoginViewModel
+        > {
   @override
   // Creates and provides the ViewModel instance for this widget
   LoginViewModel provideViewModel() => widget.viewModel();
