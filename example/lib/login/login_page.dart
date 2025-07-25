@@ -33,11 +33,11 @@ class _LoginPageState extends State<LoginPage>
   // Creates and provides the ViewModel instance for this widget
   LoginViewModel provideViewModel() => widget.viewModel();
 
-  // Uses signals to observe only the isAuthenticating part of the state
+  // Uses selector to observe only the isAuthenticating part of the state
   // and automatically dispose when the widget is disposed
   late final _isAuthenticating = viewModel.select(
     (state) => state.isAuthenticating,
-    debugLabel: 'LoginPage: isAuthenticating',
+    debugLabel: 'isAuthenticating',
   );
 
   @override
@@ -86,62 +86,62 @@ class _LoginPageState extends State<LoginPage>
       appBar: AppBar(title: const Text('MVI Example')),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        // Watch widget from signals_flutter automatically rebuilds this subtree
+        // ValueListenableBuilder automatically rebuilds this subtree
         // whenever isAuthenticating changes
-        child: Watch(debugLabel: 'LoginPage: Login Form', (context) {
-          // Get the value of the isAuthenticating signal
-          final isAuthenticating = _isAuthenticating.value;
-
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextField(
-                enabled: !isAuthenticating,
-                decoration: InputDecoration(
-                  labelText: 'Email',
-                  hintText: 'admin@admin.com',
-                  prefixIcon: Icon(
-                    Icons.email,
-                    color: Theme.of(context).primaryColor,
+        child: ValueListenableBuilder(
+          valueListenable: _isAuthenticating,
+          builder: (context, isAuthenticating, child) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextField(
+                  enabled: !isAuthenticating,
+                  decoration: InputDecoration(
+                    labelText: 'Email',
+                    hintText: 'admin@admin.com',
+                    prefixIcon: Icon(
+                      Icons.email,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
+                  // Dispatches EmailChanged events to update the ViewModel state
+                  onChanged: (value) => addEvent(EmailChanged(value)),
+                ),
+                const SizedBox(height: 8),
+                TextField(
+                  enabled: !isAuthenticating,
+                  decoration: InputDecoration(
+                    labelText: 'Password',
+                    hintText: '123456',
+                    prefixIcon: Icon(
+                      Icons.lock,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
+                  obscureText: true,
+                  // Dispatches PasswordChanged events to update the ViewModel state
+                  onChanged: (value) => addEvent(PasswordChanged(value)),
+                ),
+                const SizedBox(height: 16),
+                OutlinedButton(
+                  onPressed: isAuthenticating ? null : () => _onLogin(context),
+                  child: const Text(
+                    'LOGIN',
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
-                // Dispatches EmailChanged events to update the ViewModel state
-                onChanged: (value) => addEvent(EmailChanged(value)),
-              ),
-              const SizedBox(height: 8),
-              TextField(
-                enabled: !isAuthenticating,
-                decoration: InputDecoration(
-                  labelText: 'Password',
-                  hintText: '123456',
-                  prefixIcon: Icon(
-                    Icons.lock,
-                    color: Theme.of(context).primaryColor,
-                  ),
+                const SizedBox(height: 16),
+                SizedBox(
+                  height: 50,
+                  child: isAuthenticating
+                      ? const Center(child: CircularProgressIndicator())
+                      : null,
                 ),
-                obscureText: true,
-                // Dispatches PasswordChanged events to update the ViewModel state
-                onChanged: (value) => addEvent(PasswordChanged(value)),
-              ),
-              const SizedBox(height: 16),
-              OutlinedButton(
-                onPressed: isAuthenticating ? null : () => _onLogin(context),
-                child: const Text(
-                  'LOGIN',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
-              const SizedBox(height: 16),
-              SizedBox(
-                height: 50,
-                child: isAuthenticating
-                    ? const Center(child: CircularProgressIndicator())
-                    : null,
-              ),
-            ],
-          );
-        }),
+              ],
+            );
+          },
+        ),
       ),
     );
   }

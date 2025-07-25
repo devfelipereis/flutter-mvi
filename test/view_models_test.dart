@@ -24,7 +24,7 @@ final class CounterEffect extends TestEffect {
   final String message;
 }
 
-class TestViewModel extends BaseViewModel<TestState, TestEvent, TestEffect> {
+class TestViewModel extends ViewModel<TestState, TestEvent, TestEffect> {
   TestViewModel() : super(const TestState(), debugLabel: 'TestViewModel');
 
   bool initCalled = false;
@@ -94,7 +94,7 @@ void main() {
     });
   });
 
-  group('BaseViewModel', () {
+  group('ViewModel', () {
     late TestViewModel viewModel;
 
     setUp(() {
@@ -102,16 +102,18 @@ void main() {
     });
 
     tearDown(() {
-      viewModel.dispose();
+      if (!viewModel.isDisposed) {
+        viewModel.dispose();
+      }
     });
 
     test('should initialize with the provided initial state', () {
       const initialState = TestState();
       final viewModel = TestViewModel();
 
-      final state = viewModel.state.value;
+      final state = viewModel.state;
 
-      expect(state.value, equals(initialState.value));
+      expect(state.value.value, equals(initialState.value));
       expect(viewModel.initCalled, isTrue);
     });
 
@@ -120,14 +122,14 @@ void main() {
 
       await pumpEventQueue();
 
-      final state = viewModel.state.value;
-      expect(state.value, equals(1));
+      final state = viewModel.state;
+      expect(state.value.value, equals(1));
 
       viewModel.decrement();
       await pumpEventQueue();
 
-      final newState = viewModel.state.value;
-      expect(newState.value, equals(0));
+      final newState = viewModel.state;
+      expect(newState.value.value, equals(0));
     });
 
     test('should emit effects', () async {

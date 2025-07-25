@@ -17,11 +17,10 @@ class _PostsScreenState extends State<PostsScreen>
     with
         // The mixin provides the connection between widget and ViewModel
         // It handles the lifecycle, state updates, and event dispatching
-        ViewModelMixin<
+        SimpleViewModelMixin<
           PostsScreen,
           PostsState,
           PostsEvent,
-          PostsEffect,
           PostsViewModel
         > {
   @override
@@ -37,22 +36,23 @@ class _PostsScreenState extends State<PostsScreen>
       body: RefreshIndicator(
         // Event dispatching on user interaction (pull-to-refresh)
         onRefresh: () async => addEvent(FetchPosts()),
-        // Watch widget from signals_flutter automatically rebuilds this subtree
-        // whenever any signal it depends on changes (in this case, viewModel.state)
-        // This ensures our UI stays in sync with the ViewModel's state efficiently
-        child: Watch(
-          debugLabel: 'Posts Screen Content',
-          // AnimatedSwitcher provides smooth transitions between different states
-          (context) => AnimatedSwitcher(
-            duration: const Duration(milliseconds: 500),
-            // Pattern matching on the state to render the appropriate UI
-            // This is a key concept in MVI where the UI is a pure function of state
-            child: switch (viewModel.state.value) {
-              PostsLoading() => const _LoadingIndicator(),
-              PostsLoaded(posts: final posts) => _PostList(posts: posts),
-              PostsError(error: final error) => _ErrorMessage(error: error),
-            },
-          ),
+        // Using ViewModelListener to listen to state changes
+        // This is similar to Riverpod's Consumer or Signals' Watch widget
+        child: ValueListenableBuilder(
+          valueListenable: viewModel.state,
+          builder: (context, state, child) {
+            // AnimatedSwitcher provides smooth transitions between different states
+            return AnimatedSwitcher(
+              duration: const Duration(milliseconds: 500),
+              // Pattern matching on the state to render the appropriate UI
+              // This is a key concept in MVI where the UI is a pure function of state
+              child: switch (state) {
+                PostsLoading() => const _LoadingIndicator(),
+                PostsLoaded(posts: final posts) => _PostList(posts: posts),
+                PostsError(error: final error) => _ErrorMessage(error: error),
+              },
+            );
+          },
         ),
       ),
     );

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:example/login/login_page.dart';
 import 'package:example/login/view_model/login_view_model.dart';
-import 'package:mvi/mvi.dart';
 
 void main() {
-  SignalsObserver.instance = null;
   runApp(const MyApp());
 }
 

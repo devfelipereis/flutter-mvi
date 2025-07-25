@@ -8,7 +8,7 @@ export 'login_event.dart';
 export 'login_state.dart';
 
 final class LoginViewModel
-    extends BaseViewModel<LoginState, LoginEvent, LoginEffect> {
+    extends ViewModel<LoginState, LoginEvent, LoginEffect> {
   LoginViewModel() : super(const LoginState(), debugLabel: 'LoginViewModel');
 
   @override
