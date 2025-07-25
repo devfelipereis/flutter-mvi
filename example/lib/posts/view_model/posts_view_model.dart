@@ -6,8 +6,7 @@ import 'package:mvi/mvi.dart';
 export 'posts_event.dart';
 export 'posts_state.dart';
 
-final class PostsViewModel
-    extends SimpleViewModel<PostsState, PostsEvent> {
+final class PostsViewModel extends SimpleViewModel<PostsState, PostsEvent> {
   PostsViewModel({required PostsRepository postsRepository})
     : _postsRepository = postsRepository,
       super(const PostsLoading(), debugLabel: 'PostsViewModel');
