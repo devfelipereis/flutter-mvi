@@ -94,7 +94,7 @@ class TestWidgetState extends State<TestWidget>
   final List<String> errors = [];
 
   @override
-  TestViewModel provideViewModel() => widget.viewModelCreator();
+  TestViewModel createViewModel() => widget.viewModelCreator();
 
   @override
   void onEffect(TestEffect effect, BuildContext context) {

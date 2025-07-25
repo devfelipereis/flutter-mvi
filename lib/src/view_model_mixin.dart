@@ -29,11 +29,11 @@ mixin ViewModelMixin<
   /// Subscription to the effects stream from the ViewModel
   late final StreamSubscription<F> _effectSubscription;
 
-  /// Override this method to provide a ViewModel instance for this widget
+  /// Override this method to create a ViewModel instance for this widget
   ///
   /// This is where you should initialize and return your ViewModel
   @protected
-  VM provideViewModel();
+  VM createViewModel();
 
   /// Override this method to handle effects (side effects) from the ViewModel
   ///
@@ -55,7 +55,7 @@ mixin ViewModelMixin<
   void initState() {
     super.initState();
     // Initialize the ViewModel
-    viewModel = provideViewModel();
+    viewModel = createViewModel();
     // Subscribe to the effects stream
     _effectSubscription = viewModel.effects.listen(
       (effect) {
@@ -106,17 +106,17 @@ mixin SimpleViewModelMixin<
   /// The ViewModel instance that manages state and business logic
   late final VM viewModel;
 
-  /// Override this method to provide a ViewModel instance for this widget
+  /// Override this method to create a ViewModel instance for this widget
   ///
   /// This is where you should initialize and return your ViewModel
   @protected
-  VM provideViewModel();
+  VM createViewModel();
 
   @override
   void initState() {
     super.initState();
     // Initialize the ViewModel
-    viewModel = provideViewModel();
+    viewModel = createViewModel();
   }
 
   @override

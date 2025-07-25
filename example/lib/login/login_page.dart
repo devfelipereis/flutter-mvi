@@ -31,7 +31,7 @@ class _LoginPageState extends State<LoginPage>
         > {
   @override
   // Creates and provides the ViewModel instance for this widget
-  LoginViewModel provideViewModel() => widget.viewModel();
+  LoginViewModel createViewModel() => widget.viewModel();
 
   // Uses selector to observe only the isAuthenticating part of the state
   // and automatically dispose when the widget is disposed

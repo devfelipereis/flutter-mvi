@@ -26,7 +26,7 @@ class _PostsScreenState extends State<PostsScreen>
   @override
   // Creates the ViewModel and immediately triggers a FetchPosts event
   // This is a good example of handling initial data loading in MVI
-  PostsViewModel provideViewModel() =>
+  PostsViewModel createViewModel() =>
       widget.viewModel()..addEvent(FetchPosts());
 
   @override
