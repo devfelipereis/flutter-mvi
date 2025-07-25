@@ -64,7 +64,10 @@ Then, run `flutter pub get`.
 
 ## Example
 
-Check the examples folder for complete implementations and tests.
+Check the examples folder for complete implementations and tests:
+
+- [`examples/counter/`](examples/counter/) - Simple counter app demonstrating basic MVI pattern
+- [`examples/login_posts_list/`](examples/login_posts_list/) - Complete app with login flow and data fetching
 
 ## Features
 
