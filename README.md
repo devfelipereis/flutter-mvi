@@ -1,16 +1,3 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
-
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/tools/pub/writing-package-pages).
-
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/to/develop-packages).
--->
-
 <p align="center">
   <a href="https://pub.dev/packages/mvi">
     <img alt="Pub Version" src="https://img.shields.io/pub/v/mvi">
@@ -28,28 +15,41 @@ and the Flutter guide for
 
 # MVI - Model-View-Intent for Flutter
 
-An implementation of the MVI (Model-View-Intent) pattern for Flutter that uses the `signals` package for managing state.
+A clean and efficient implementation of the MVI (Model-View-Intent) pattern for Flutter using ValueListenable for reactive state management.
 
-This package provides a basic structure to implement the MVI pattern in your Flutter projects, helping you to build reactive and predictable user interfaces.
+This package provides a robust architecture to implement the MVI pattern in your Flutter projects, helping you build reactive, predictable, and testable user interfaces.
 
 ## What is MVI?
 
-MVI is a unidirectional data flow architecture pattern that helps in managing the state of your application in a more predictable way. It is composed of three main components:
+MVI is a unidirectional data flow architecture pattern that helps manage application state predictably. It consists of three main components:
 
 -   **Model**: Represents the state of the application. It's an immutable object that holds all the data needed for the view.
 -   **View**: The user interface (UI) that displays the state. In Flutter, this would be your widgets.
 -   **Intent**: Represents an intention to change the state. These are usually triggered by user interactions with the UI.
 
-## Core Concepts
+Additionally, this implementation supports **Effects** for handling one-time side effects like navigation, showing snackbars, or other UI actions that don't affect state.
 
-This implementation is built around a few core components:
+## Core Components
 
--   `BaseViewModel`: A class that holds the business logic. It receives intents, processes them, and emits new states.
--   `ViewModelMixin`: A mixin that can be used with a `StatefulWidget`'s `State` to automatically listen to state changes from a `BaseViewModel` and rebuild the UI.
+### Base Classes
 
-## State Management with Signals
+-   **`BaseState`**: Abstract base class for all state objects. States should be immutable.
+-   **`BaseEvent`**: Abstract base class for all events (intents) that can trigger state changes.
+-   **`BaseEffect`**: Abstract base class for all effects (one-time side effects).
 
-This MVI implementation uses the [signals](https://pub.dev/packages/signals) package to manage the state. The state of a `BaseViewModel` is a `Signal` that can be observed by the UI. When a new state is emitted, the UI is automatically rebuilt.
+### ViewModels
+
+-   **`SimpleViewModel`**: For state management without effects.
+-   **`ViewModel`**: For state management with effects support.
+
+### Mixins
+
+-   **`SimpleViewModelMixin`**: Mixin for connecting widgets to SimpleViewModels.
+-   **`ViewModelMixin`**: Mixin for connecting widgets to ViewModels with effects support.
+
+## State Management with ValueListenable
+
+This MVI implementation uses Flutter's built-in `ValueListenable` and `ValueNotifier` for reactive state management. The state is observable and automatically triggers UI rebuilds when changed.
 
 ## Getting Started
 
@@ -57,16 +57,22 @@ Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  mvi: ^1.0.0
+  mvi: ^2.0.0
 ```
 
 Then, run `flutter pub get`.
 
-## Usage
+## Example
 
-Check the example folder for a detailed implementation with tests.
+Check the examples folder for complete implementations and tests.
 
-**Note**: The architecture in this example is designed solely for simplicity and demonstration purposes.
+## Features
+
+- ✅ **Reactive State Management**: Built on Flutter's ValueListenable
+- ✅ **Effects Support**: Handle side effects like navigation and dialogs
+- ✅ **Performance Optimized**: Selectors prevent unnecessary rebuilds
+- ✅ **Debug Support**: Built-in logging for development
+- ✅ **Testable**: Easy to unit test ViewModels and business logic
 
 ## Contributing
 
