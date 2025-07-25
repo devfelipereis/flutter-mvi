@@ -30,7 +30,7 @@ final class MessageEffect extends TestEffect {
   final String message;
 }
 
-class TestViewModel extends BaseViewModel<TestState, TestEvent, TestEffect> {
+class TestViewModel extends ViewModel<TestState, TestEvent, TestEffect> {
   TestViewModel() : super(const TestState());
 
   bool eventHandled = false;
@@ -94,7 +94,7 @@ class TestWidgetState extends State<TestWidget>
   final List<String> errors = [];
 
   @override
-  TestViewModel provideViewModel() => widget.viewModelCreator();
+  TestViewModel createViewModel() => widget.viewModelCreator();
 
   @override
   void onEffect(TestEffect effect, BuildContext context) {
@@ -126,7 +126,9 @@ void main() {
     });
 
     tearDown(() {
-      testViewModel.dispose();
+      if (!testViewModel.isDisposed) {
+        testViewModel.dispose();
+      }
     });
 
     group('initialization', () {
